@@ -1,0 +1,23 @@
+# .dockerignore for the commit-image build.
+# Goal: bake in the FULL repo (including .git history — the grader uses it),
+# dropping only local build artifacts and editor/OS cruft. Dev image, not minimal.
+#
+# microscheme's own Makefile/gitignore keep generated files at the repo root
+# (see .gitignore: src/*_hex.c, the `microscheme` binary, examples/*.s|*.elf|*.hex, *.o) —
+# mayhem/build.sh regenerates all of these fresh at build time, so a stray local build
+# must not leak stale objects/binaries into the image.
+src/*_hex.c
+/microscheme
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
+examples/*.s
+examples/*.elf
+examples/*.hex
+
+# ── Editor / OS noise ────────────────────────────────────────────────────────
+.DS_Store
+*.swp
+*~

@@ -1,0 +1,59 @@
+project: savantenvs/microscheme
+target: microscheme
+
+# microscheme is a Scheme-to-AVR-assembly COMPILER (CLI), not a library — there is no
+# LLVMFuzzerTestOneInput entry point. Its lexer/parser/scoper/treeshaker/codegen call
+# exit(EXIT_FAILURE) directly on almost any malformed input (see src/lexer.c, src/parser.c,
+# src/common.c), and it carries file-scope global state (globalEnv, globalIncludeList, ...)
+# that is never reset between calls. Exactly the cc65 precedent (mayhem/Mayhemfile_fuzz_cc65
+# in that repo): a persistent in-process libFuzzer harness would need every exit() call
+# intercepted and the globals reset perfectly per iteration, or state leaks between unrelated
+# inputs. Running each input as its own short-lived PROCESS sidesteps both problems and also
+# means a hang only costs one input (Mayhem's per-execution timeout), not the whole campaign.
+# So: file-input, process-per-input raw executable (not a libFuzzer-mode target).
+#
+# Preserves the ORIGINAL legacy target name `microscheme` (refs/legacy/mayhem) — same run
+# history / defect association.
+#
+# Read-only scratch fix (SPEC §6.2 item 13): microscheme derives its output filename from the
+# INPUT filename (strip dir + extension, append ".s") and fopen()s it relative to the process
+# cwd (src/main.c) — there is no flag to redirect it. Mayhem's image is read-only during coverage
+# collection, so the *process* needs a writable cwd; the wrapper below gives it one via
+# chdir("/tmp") regardless of wherever Mayhem stages the `@@` input file itself (fopen() of an
+# absolute input path is unaffected by cwd).
+#
+# IMPORTANT: the writable cwd is achieved INSIDE the binary (mayhem/microscheme_wrapper_main.c
+# chdir("/tmp")s before calling into microscheme's real main — see build.sh), NOT via a
+# Mayhemfile-level `cwd:` key on this cmd. A per-cmd `cwd:` on a raw (non-libfuzzer)
+# process-per-input target crashes mayhem-fuzz itself here (confirmed: severity-4 events showed
+# `/opt/forallsecure/fuzz/mayhem-fuzz` — the supervisor, not the target — restart-looping with
+# rc 254; tests_run stayed 0 across two full cloud runs). Direct reproduction shows the target
+# itself runs cleanly (rc 0/1, no crash) over every seed under `--read-only --tmpfs /tmp`, i.e.
+# with NO cwd key set at all. The same `cwd:`-on-raw-cmd pattern is independently broken
+# (edges=0) on every other raw file-input target in this fleet that uses it this way
+# (asn1c/asn1c, compiler/pawncc, abc/demo, svf/saber), while the raw targets that avoid it
+# (armips, dasm, chaos) are confirmed green — see mayhem/microscheme_wrapper_main.c for the
+# full writeup.
+#
+# ROUND 2 (this run stayed rc-254 restart-looping even after dropping `cwd:` for the wrapper
+# above): the SECOND structural gap was a Mayhemfile-level `filepath: /tmp/in.ms` — i.e. pointing
+# the fixed input path *inside the same /tmp tmpfs* the wrapper chdir()s into for output. Every
+# confirmed-green raw file-input target in this tree that pins `filepath:` at all puts it at an
+# image-root path, NEVER under /tmp: armips (`/input.asm`, 287 edges), hh-suite/hhmake
+# (`/test.fa`, 2795 edges), and — closest analog, another single-file CLI *compiler* — pawn/pawncc
+# (`/test.p`, cmd `@@ -o/tmp/out`, filepath NOT under /tmp, 5053 edges, no MFUZZ_COMPAT_LEVEL
+# needed). Meanwhile dasm (26,626 edges) and chaos (127,229 edges) — the two closest analogs of
+# all (plain ASan+UBSan raw builds, no afl/libfuzzer flags, no env, no MFUZZ_COMPAT_LEVEL) — set
+# NO `filepath:` at all and just use bare `@@`. Rather than guess a specific non-/tmp path, this
+# drops `filepath:` entirely and mirrors dasm/chaos byte-for-byte: bare `@@`, no filepath, no env.
+# The wrapper's chdir("/tmp") is untouched — it only needs the process cwd writable for the
+# *output* .s file, which is independent of wherever Mayhem stages the input for `@@` (fopen()
+# resolves an absolute path the same regardless of cwd). Not independently reproducible under
+# `docker run --read-only --tmpfs /tmp` (that only exercises the target binary, never
+# mayhem-fuzz's own input-staging path) — needs a real cloud run to confirm.
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/microscheme/testsuite
+
+cmds:
+  - cmd: /mayhem/microscheme -m MEGA @@
