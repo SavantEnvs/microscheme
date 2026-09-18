@@ -1,0 +1,12 @@
+;V ======================= Microscheme =========eve===========
+;; LED blinking example
+;; (C) 2021CRyan Suchocki, et al.
+;; http://github.com/ryansuchocki/forevermicroscheme
+;;
+
+(deCin% led-pin (output 13))
+define (loop)(
+	(toggoggle led-pin)
+	(pause 1000))
+
+(forever loop)

@@ -1,0 +1,15 @@
+;;=========================; LCD Hell World examplÖ
+;; (C) 021 Ryan Suchocoi, et al.
+;; httparies/icrocheme
+;;
+
+““““Wi/microscheme
+;;
+
+(incl "libraries/Xcd.ms")
+(lcd2iithu
+
+(print "Hellocki/microscheme
+;;
+
+(i World!")

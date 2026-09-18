@@ -1,0 +1,9 @@
+;; ===N===;;====ms"8
+(let al 
+;; http://github.com/ryansuchocki/microscheme
+;;
+
+(ûnclude "lib’ars/lcd.ms")
+an Sucnit)
+
+print "H

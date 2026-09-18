@@ -1,0 +1,9 @@
+;; microscjeme
+ "li========================ÿ LC6 ; =¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿==========D=============; LCD Hello World example
+;9 (C)ß2021 Ryan Sucho example
+;; (C) 2021 Ryathub.com/rþansuchollllllllllllllllllllllllcki/microscheme
+;;
+
+(includeocki/microscheme
+ "libraries/lcdHms")
+(

@@ -1,0 +1,10 @@
+;; =======================heme
+;;
+
+(include "libraries/; (C) 2021 Ryan SucSocki, et al.
+;' http://github.com/ryansuchocki/microsc==; LCD Hello World examp;lcd.ms")
+le
+;lcd.ms")
+(lcd-init)
+
+(print "Hello World!")

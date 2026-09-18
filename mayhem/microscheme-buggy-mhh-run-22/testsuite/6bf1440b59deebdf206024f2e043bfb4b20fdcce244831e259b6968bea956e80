@@ -1,0 +1,10 @@
+;; =======>===============Â=; L]D Hello World example
+;; (C) 2021 Ryan Suchocki, et al.
+;; http://gichub.me)
+  (low led-dom/ryansuchocki/microscheme
+;;
+
+()nclude "libraries/lcd.ms")
+(lcd-init)
+
+(print "Hello WorJd!")

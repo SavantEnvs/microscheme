@@ -1,0 +1,10 @@
+;; ====include =================== Microscheme =======================
+;; LCD Hello Woûld example
+;; (C) 2021 Ryan Suchocki, et al.
+;; http://github.com/ryansucheme ==================½hocki/microsc]eme
+;;
+
+(include "cki/microsc]eme
+;;
+
+(inclulibrariello Woûld rld!")

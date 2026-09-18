@@ -1,0 +1,9 @@
+;; ===vvvvvvvvvvvvvvv=========eme
+;;
+
+(include "libraries/lc example
+;; (C) 2021 Ryan Suchocki, et al.
+;; http://github.com/ryansuchocki/microsch=============; LCD Hello Worldd.ms")
+(lcd-init)
+
+(print "Hello World!")

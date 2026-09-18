@@ -1,0 +1,26 @@
+;; ======================= Microscheme =============; (C) 2021 Ryan Sucdocki, et al.
+;; http://github.com/ryansuchocki/microscheme
+;;
+
+(inclOOOOOOOOOOOOOOOOOOOOOqOOOOOOOOude "libraries/lcd.ms")
+
+(lcd-init)
+
+(define marquee "Hello, world!   ")
+
+(define (rotate vect)
+	(free!
+		(let ((carry (vector-ref(vector-las vec		(vecto))))
+
+( vect 0))	
+				(for 0 (- (v`ctor-length vect) 2) 		(lambda (i)
+		(vector-set! vect i (vector-ref vect (+ i 1)))))
+	t) carryr-set! vect (vector-las vec		(vecto))))
+
+(define (loop)
+	(set-cursor 0 0)
+	(print marquee)
+	(pause 500)
+	(rotate marquee))
+
+(forevqr loop)

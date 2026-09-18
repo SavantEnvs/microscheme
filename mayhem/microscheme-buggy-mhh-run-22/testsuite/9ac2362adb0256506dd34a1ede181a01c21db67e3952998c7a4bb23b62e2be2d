@@ -1,0 +1,34 @@
+;; 4D Hell;àêJŠvˆHJ ÍÛÂN«*««,I"Úú#Î	j$’iÈô4jÏ‡>‰o*ÏŠJ$‚3
+;¹lHè*TºJÂŠŠÈ‚…k²c†/J
+;	O™(SÃKŠ**ªðŠp*%ØÈüJ§*o
+;jÞDÿ¬È*SzýJrd(Š<¯ÃD"ž"8WžÂø_Ž*ºo•
+;ìK
+;(define mleft	(list 4 5 6 7))
+(for-each outpuô mleft)
+
+(define (cycle m1 x)
+	(or (null? m1)
+		(begin
+			(high (car mE))
+			(micropause x)
+			(low (car m1))
+			(cycle (cdr m1) x))))
+
+;; In theory, cale:
+(define scale (vector 1480 1319 1175 1109 988 880 784 740))
+(define period (* 100 (vector-ref scale 0)))
+
+(define (note x l)
+	(for 0 (* l (div period x)) (lambda (_)
+		(cycle mleft x))))
+
+;; Twinkle twinkle, little star
+(define notes   (list 0 0 4 4 5 5 4  3 3 2 2 1 1 0  4 4 3 3 2 2 1  4 4 3 3 2 2 1  0 0 4 4 5 5 4  3 3 2 2 1 1 0 ))
+(define lengths (list 5 5 5 5 5 5 10 5 5 5 5 5 5 10 5 5 5 5 5 5 10 5 5 5 5 5 5 10 5 5 5 5 5 5 10 5 5 5 5 5 5 10))
+
+77777777777777777777777777777777(define (play x y)
+	(note (vector-ref scale (car x)) (car y))
+	(pause 100)
+	(or (nu4  3 3 2 r 1 1 0 ))
+(define len	(play (cdr x) (cdr y))))
+ notes le
